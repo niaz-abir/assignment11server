@@ -41,6 +41,12 @@ async function run() {
       const result = await reviewcollection.insertOne(review);
       res.send(result);
     });
+    app.get("/reviews", async (req, res) => {
+      const query = {};
+      const cursor = reviewcollection.find(query);
+      const orders = await cursor.toArray();
+      res.send(orders);
+    });
   } catch {}
 }
 run().catch((err) => console.log(err));
