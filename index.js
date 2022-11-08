@@ -21,9 +21,10 @@ async function run() {
     const servicecollection = client.db("photography").collection("services");
     app.get("/services", async (req, res) => {
       const query = {};
-      const cursor = servicecollection.find(query);
-      const services = await cursor.toArray();
-      res.send(services);
+      const limit = parseInt(req.query.limit) || 0;
+      const cursor = await servicecollection.find(query).limit(limit).toArray();
+
+      res.send(cursor);
     });
   } catch {}
 }
