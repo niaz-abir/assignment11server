@@ -96,6 +96,11 @@ async function run() {
       const service = await cursor.toArray();
       res.send(service);
     });
+    // add service
+    app.post("/services", async (req, res) => {
+      const response = await servicecollection.insertOne(req.body);
+      res.send(response);
+    });
   } catch {}
 }
 run().catch((err) => console.log(err));
