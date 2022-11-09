@@ -20,6 +20,7 @@ async function run() {
   try {
     const servicecollection = client.db("photography").collection("services");
     const reviewcollection = client.db("photography").collection("reviews");
+    const amountsection = client.db("photography").collection("amount");
 
     app.get("/services", async (req, res) => {
       const query = {};
@@ -46,6 +47,13 @@ async function run() {
       const cursor = reviewcollection.find(query);
       const orders = await cursor.toArray();
       res.send(orders);
+    });
+
+    app.get("/amount", async (req, res) => {
+      const query = {};
+      const cursor = amountsection.find(query);
+      const service = await cursor.toArray();
+      res.send(service);
     });
   } catch {}
 }
