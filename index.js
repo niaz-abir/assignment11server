@@ -21,6 +21,7 @@ async function run() {
     const servicecollection = client.db("photography").collection("services");
     const reviewcollection = client.db("photography").collection("reviews");
     const amountsection = client.db("photography").collection("amount");
+    const studiocollection = client.db("photography").collection("studio");
 
     app.get("/services", async (req, res) => {
       const query = {};
@@ -42,6 +43,7 @@ async function run() {
       const result = await reviewcollection.insertOne(review);
       res.send(result);
     });
+
     app.get("/reviews", async (req, res) => {
       const query = {};
       const cursor = reviewcollection.find(query);
@@ -49,9 +51,52 @@ async function run() {
       res.send(orders);
     });
 
+    app.delete("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewcollection.deleteOne(query);
+      console.log(result);
+      res.send(result);
+
+      //   console.log("trying to delete", id);
+    });
+    app.get("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewcollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const user = req.body;
+      const option = { upsert: true };
+      const updateduser = {
+        $set: {
+          name: user.name,
+          rating: user.rating,
+          message: user.message,
+        },
+      };
+      const result = await reviewcollection.updateOne(
+        filter,
+        updateduser,
+        option
+      );
+      res.send(result);
+    });
+
     app.get("/amount", async (req, res) => {
       const query = {};
       const cursor = amountsection.find(query);
+      const service = await cursor.toArray();
+      res.send(service);
+    });
+
+    app.get("/studio", async (req, res) => {
+      const query = {};
+      const cursor = studiocollection.find(query);
       const service = await cursor.toArray();
       res.send(service);
     });
