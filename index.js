@@ -60,6 +60,7 @@ async function run() {
 
       //   console.log("trying to delete", id);
     });
+
     app.get("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -67,23 +68,18 @@ async function run() {
       res.send(result);
     });
 
-    app.put("/reviews/:id", async (req, res) => {
+    app.patch("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const user = req.body;
-      const option = { upsert: true };
       const updateduser = {
         $set: {
-          name: user.name,
+          name: user.names,
           rating: user.rating,
           message: user.message,
         },
       };
-      const result = await reviewcollection.updateOne(
-        filter,
-        updateduser,
-        option
-      );
+      const result = await reviewcollection.updateOne(filter, updateduser);
       res.send(result);
     });
 
